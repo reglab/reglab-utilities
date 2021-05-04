@@ -68,11 +68,12 @@ function finish_from_file_with_info () {
 	echo -e "$color http://localhost:$port/?token=$token $non_color"
 }
 function basicjup () {
+        echo "starting"
 	#args: directory and optionally a container
 	#based off info from https://asconfluence.stanford.edu/confluence/display/REGLAB/Sherlock#Sherlock-JupyterNotebook
 
 	#~~static params~~
-	default_container=$GROUP_HOME/singularity/cafo.sif
+	default_container=$GROUP_HOME/singularity/cafo.sif #iirc you can leave this blank to run without using a container (assuming you also didn't pass one in from the command line parameter, ofc)
 	#~~other static parameters. if the log file isn't in the right location, it wont be able to detect the jupyter notebook. other than that, these are assumed to be constant across runs (nothing bad happens if not, you just might still have a jupyter running it doesnt detect)~~
         script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 	out_file=${script_dir}/basicjup.log
@@ -80,15 +81,20 @@ function basicjup () {
 	gpu="False" #can set to 0 with --no-gpu
 
 	#~~read args~~ warning, I haven't tested all the code paths! (Less exciting nitpick: the pointing to help thing is basically duplicated)
+        #another warning: it's just kludgey how arguments get read. If wanting to add another argument or etc, redo it.
 	#~~read 1st arg or offer help~~
 	if [ -z "$1" ]; then #if not providing any argument
 		echo "Please provide a base dir for jupyter to start in. eg. it could just be \`basicjup .\`. You can also do \`basicjup --help\` for more help. "
 		return
 	fi
-	if [ $1 = "--help" ]; then #if asking for help
+	if [[ $1 = "--help" || $1 = "-h" ]]; then #if asking for help
 		echo "Format: basicjup dir [--gpu OR --no-gpu] [singularity container sif file]"
-		echo "Examples: basicjup . | basicjup ~ --nogpu | basicjup . ~/my_container.sif --gpu"
+		echo "Examples:"
+                echo "\t basicjup ."
+                echo "\t basicjup ~ --nogpu"
+                echo "basicjup . ~/my_container.sif --gpu"
 		echo "Current defaults if not provided: default container is $default_container, gpu is set to $gpu"
+                echo "You can change more settings such as the default time by editing the slurm request template in this file."
 		return
 	fi
 	if [ ! -d "$1" ]; then #validate $1 is a directory
@@ -188,5 +194,5 @@ function basicjup () {
 	#~~provide easy access~~
 	finish_from_file_with_info $out_file $(get_node $job_id)
 }
-
-#basicjup "$@" #"$@" passes all arguments
+echo "$@"
+basicjup "$@" #$@ passes all arguments
