@@ -89,10 +89,11 @@ function basicjup () {
 	fi
 	if [[ $1 = "--help" || $1 = "-h" ]]; then #if asking for help
 		echo "Format: basicjup dir [--gpu OR --no-gpu] [singularity container sif file]"
-		echo "Examples:"
-                echo "\t basicjup ."
-                echo "\t basicjup ~ --nogpu"
-                echo "basicjup . ~/my_container.sif --gpu"
+                echo "The most basic usage:"
+                echo "    basicjup dir/where/you/want/jupyter/server/root/to/be"
+		echo "More examples:"
+                echo "    basicjup ~ --nogpu"
+                echo "    basicjup . ~/my_container.sif --gpu"
 		echo "Current defaults if not provided: default container is $default_container, gpu is set to $gpu"
                 echo "You can change more settings such as the default time by editing the slurm request template in this file."
 		return
