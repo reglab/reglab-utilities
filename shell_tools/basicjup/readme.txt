@@ -5,7 +5,7 @@ alias basicjup='~/reglab-utilities/shell_tools/basicjup/basicjup.sh'
 
 for basic help: basicjup --help
 
-simplest usage: basicjup dir/where/you/want/jupyter/server/root/to/be
+simplest usage (using the current directory as the jupyter server root directory): basicjup .
 
 
 
